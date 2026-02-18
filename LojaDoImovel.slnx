@@ -1,1 +1,26 @@
-<Solution />
+<Solution>
+  <Folder Name="/1 - API/">
+    <Project Path="LojaDoImovel.Api/LojaDoImovel.Api.csproj" />
+  </Folder>
+  <Folder Name="/2 - Application/">
+    <Project Path="LojaDoImovel.Application/LojaDoImovel.Application.csproj" />
+  </Folder>
+  <Folder Name="/3 - Domain/">
+    <Project Path="LojaDoImovel.Domain/LojaDoImovel.Domain.csproj" />
+  </Folder>
+  <Folder Name="/4 - Infrastructure/">
+    <Project Path="LojaDoImovel.Infrastructure/LojaDoImovel.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/5 - Contracts/">
+    <Project Path="LojaDoImovel.Contracts/LojaDoImovel.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/6 - Transform/">
+    <Project Path="LojaDoImovel.Transform/LojaDoImovel.Transform.csproj" />
+  </Folder>
+  <Folder Name="/7 - IoC/">
+    <Project Path="LojaDoImovel.IoC/LojaDoImovel.IoC.csproj" />
+  </Folder>
+  <Folder Name="/8 - Tests/">
+    <Project Path="LojaDoImovel.Tests/LojaDoImovel.Tests.csproj" />
+  </Folder>
+</Solution>
