@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LojaDoImovel.Application\LojaDoImovel.Application.csproj" />
+    <ProjectReference Include="..\LojaDoImovel.Infrastructure\LojaDoImovel.Infrastructure.csproj" />
+    <ProjectReference Include="..\LojaDoImovel.Transform\LojaDoImovel.Transform.csproj" />
+  </ItemGroup>
+
 </Project>
