@@ -3,6 +3,8 @@ using LojaDoImovel.Application.Services.Interfaces;
 using LojaDoImovel.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 
 namespace LojaDoImovel.Api.Controllers;
@@ -13,33 +15,128 @@ public class AuthController : ControllerBase
 {
     private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
-    private readonly ILogger _logger;
+    private readonly ILogger<AuthController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-    public AuthController(ITokenService tokenService, IConfiguration configuration, ILogger logger, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager)
+    public AuthController(ITokenService tokenService, IConfiguration configuration, ILogger<AuthController> logger, UserManager<ApplicationUser> userManager)
     {
         _tokenService = tokenService;
         _configuration = configuration;
         _logger = logger;
         _userManager = userManager;
-        _roleManager = roleManager;
     }
 
     [HttpPost]
-    [Route("/login")]
+    [Route("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email!);
 
-        if(user is not null && await _userManager.CheckPasswordAsync(user, loginDto.Password!))
+        if (user is not null && await _userManager.CheckPasswordAsync(user, loginDto.Password!))
         {
+            if (user.Status is UserStatus.Pending)
+                return Unauthorized("Aguardando aprovação de um administrador.");
+
             var userRoles = await _userManager.GetRolesAsync(user);
 
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName!),
+                new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            foreach(var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
+
+            var token = _tokenService.GenerateAccessToken(authClaims, _configuration);
+
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            _ = int.TryParse(_configuration["Jwt:RefreshTokenValidityInMinutes"], out int refreshTokenValidtInMinutes);
+
+            user.RefreshToken = refreshToken;
+
+            user.RefreshTokenExpireTime = DateTime.UtcNow.AddMinutes(refreshTokenValidtInMinutes);
+
+            await _userManager.UpdateAsync(user);
+
+            return Ok(new
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                RefreshToken = refreshToken,
+                Expiration = token.ValidTo
+            });
         }
+
+        return Unauthorized();
+    }
+
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+    {
+        var userExists = await _userManager.FindByEmailAsync(registerDto.Email!);
+
+        if (userExists is not null)
+            return StatusCode((int)HttpStatusCode.Conflict, "Já existe um usuário cadastrado!");
+
+        ApplicationUser user = new()
+        {
+            Email = registerDto.Email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            UserName = registerDto.UserName,
+            PhoneNumber = registerDto.PhoneNumber,
+            Status = 0
+        };
+
+        var result = await _userManager.CreateAsync(user, registerDto.Password!);
+
+        _ = await _userManager.AddToRoleAsync(user, "userunapproved");
+
+        if (!result.Succeeded)
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro ao criar usuário. \n{result}");
+
+        return StatusCode((int)HttpStatusCode.Created, "Usuário criado com sucesso!");
+    }
+
+    [HttpPost]
+    [Route("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+    {
+        if(tokenDto is null)
+            return BadRequest("Requisição inválida.");
+
+        string? accessToken = tokenDto.AccessToken ?? throw new ArgumentNullException(nameof(tokenDto));
+        string? refreshToken = tokenDto.RefreshToken ?? throw new ArgumentNullException(nameof (tokenDto));
+
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken, _configuration);
+
+        if (principal is null)
+            return BadRequest("Refresh/Access token inválido.");
+
+        string username = principal.Identity.Name;
+
+        var user = await _userManager.FindByNameAsync(username!);
+
+        if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpireTime <= DateTime.UtcNow)
+            return BadRequest("Refresh/Access token inválido.");
+
+        var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims.ToList(), _configuration);
+        var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = newRefreshToken;
+
+        await _userManager.UpdateAsync(user);
+
+        return new ObjectResult(new
+        {
+            accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            refreshToken = newRefreshToken,
+        });
     }
 }

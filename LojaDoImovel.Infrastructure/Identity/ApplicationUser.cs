@@ -6,4 +6,5 @@ public class ApplicationUser : IdentityUser<int>
 {
     public string? RefreshToken { get; set; }
     public DateTime RefreshTokenExpireTime { get; set; }
+    public UserStatus? Status { get; set; }
 }

@@ -26,6 +26,31 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
         builder.Entity<IdentityUserToken<int>>().ToTable("user_tokens");
         builder.Entity<IdentityRoleClaim<int>>().ToTable("role_claims");
 
+        // Seed default roles
+        builder.Entity<IdentityRole<int>>().HasData(
+            new IdentityRole<int>
+            {
+                Id = 1,
+                Name = "admin",
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = "00000000-0000-0000-0000-000000000001"
+            },
+            new IdentityRole<int>
+            {
+                Id = 2,
+                Name = "userapproved",
+                NormalizedName = "USERAPPROVED",
+                ConcurrencyStamp = "00000000-0000-0000-0000-000000000002"
+            },
+            new IdentityRole<int>
+            {
+                Id = 3,
+                Name = "userunapproved",
+                NormalizedName = "USERUNAPPROVED",
+                ConcurrencyStamp = "00000000-0000-0000-0000-000000000003"
+            }
+        );
+
         // --- Enterprise ---
         builder.Entity<Enterprise>(e =>
         {

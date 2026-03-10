@@ -11,7 +11,7 @@ public class DefaultModule
 {
     public static void Start(IServiceCollection service, IConfiguration configuration)
     {
-        service.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        service.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("PgSql")));
         service.AddScoped<ITokenService, TokenService>();
     }
 }
