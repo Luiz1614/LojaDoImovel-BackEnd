@@ -1,3 +1,4 @@
+using LojaDoImovel.Api.Filters;
 using LojaDoImovel.Infrastructure.Data;
 using LojaDoImovel.Infrastructure.Identity;
 using LojaDoImovel.IoC;
@@ -12,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 DefaultModule.Start(builder.Services, builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ApiExceptionFilter));
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddSwaggerGen();
