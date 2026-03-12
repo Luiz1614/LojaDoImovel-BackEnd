@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Fintrack.Contracts.DTOs.User;
+namespace LojaDoImovel.Contracts.DTOs.ApplicationUser;
 
 public class RegisterDto
 {

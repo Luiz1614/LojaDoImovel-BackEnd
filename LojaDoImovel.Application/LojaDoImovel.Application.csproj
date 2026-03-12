@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LojaDoImovel.Contracts\LojaDoImovel.Contracts.csproj" />
+    <ProjectReference Include="..\LojaDoImovel.Infrastructure\LojaDoImovel.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

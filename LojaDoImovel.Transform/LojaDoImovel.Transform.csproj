@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LojaDoImovel.Contracts\LojaDoImovel.Contracts.csproj" />
+    <ProjectReference Include="..\LojaDoImovel.Domain\LojaDoImovel.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

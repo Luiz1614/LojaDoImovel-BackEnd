@@ -1,5 +1,5 @@
-﻿using Fintrack.Contracts.DTOs.User;
-using LojaDoImovel.Application.Services.Interfaces;
+﻿using LojaDoImovel.Application.Services.Interfaces;
+using LojaDoImovel.Contracts.DTOs.ApplicationUser;
 using LojaDoImovel.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
