@@ -20,6 +20,7 @@ public class PropertyController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "userapproved")]
     public async Task<IActionResult> Post([FromBody] CreatePropertyDto createPropertyDto)
     {
         var result = await _propertyService.AddPropertyAsync(createPropertyDto);
@@ -64,6 +65,7 @@ public class PropertyController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Policy = "userapproved")]
     public async Task<IActionResult> Put(UpdatePropertyDto updatePropertyDto)
     {
         var result = await _propertyService.UpdatePropertyAsync(updatePropertyDto);
@@ -76,6 +78,7 @@ public class PropertyController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize(Policy = "userapproved")]
     public async Task<IActionResult> Delete(int idProperty)
     {
         var result = await _propertyService.DeletePropertyAsync(idProperty);

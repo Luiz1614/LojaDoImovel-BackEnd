@@ -1,6 +1,7 @@
 ﻿using LojaDoImovel.Application.Services.Interfaces;
 using LojaDoImovel.Contracts.DTOs.ApplicationUser;
 using LojaDoImovel.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -184,5 +185,23 @@ public class AuthController : ControllerBase
             accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
             refreshToken = newRefreshToken,
         });
+    }
+
+    [HttpPut("approve-user")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> ApproveUser(string username)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+
+        if (user is null)
+        {
+            return BadRequest("Usuário não encontrado.");
+        }
+
+        user.Status = UserStatus.Approved;
+
+        _ = await _userManager.UpdateAsync(user);
+
+        return Ok("Usuário aprovado com sucesso!");
     }
 }
