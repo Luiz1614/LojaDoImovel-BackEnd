@@ -13,19 +13,22 @@ public class PropertyRepository : IPropertyRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Property>> GetAllPropertiesAsync()
+    public async Task<IEnumerable<Property>> GetAllPropertiesAsync(int idEnterprise)
     {
-        return await _context.Properties.AsNoTracking().ToListAsync();
+        return await _context.Properties
+            .Where(a => a.EnterpriseId == idEnterprise)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
-    public async Task<Property?> GetPropertyByIdAsync(int id)
+    public async Task<Property?> GetPropertyByIdAsync(int idProperty, int idEnterprise)
     {
-        return await _context.Properties.FindAsync(id);
+        return await _context.Properties.FirstOrDefaultAsync(a => a.Id == idProperty && a.EnterpriseId == idEnterprise);
     }
 
-    public async Task<Property?> GetPropertyByCodeAsync(string code)
+    public async Task<Property?> GetPropertyByCodeAsync(string code, int idEnterprise)
     {
-        return await _context.Properties.FirstOrDefaultAsync(a => a.Code == code);
+        return await _context.Properties.FirstOrDefaultAsync(a => a.Code == code && a.EnterpriseId == idEnterprise);
     }
 
     public async Task<Property> AddPropertyAsync(Property property)

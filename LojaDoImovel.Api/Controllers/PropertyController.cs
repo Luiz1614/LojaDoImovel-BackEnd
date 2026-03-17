@@ -31,9 +31,9 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int idEnterprise)
     {
-        var result = await _propertyService.GetAllPropertiesAsync();
+        var result = await _propertyService.GetAllPropertiesAsync(idEnterprise);
 
         if (result == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
@@ -42,9 +42,9 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("id")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(int idProperty, int idEnterprise)
     {
-        var result = await _propertyService.GetPropertyByIdAsync(id);
+        var result = await _propertyService.GetPropertyByIdAsync(idProperty, idEnterprise);
 
         if (result == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
@@ -53,9 +53,9 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("code")]
-    public async Task<IActionResult> GetByCode(string code)
+    public async Task<IActionResult> GetByCode(string code, int idEnterprise)
     {
-        var result = await _propertyService.GetPropertyByCodeAsync(code);
+        var result = await _propertyService.GetPropertyByCodeAsync(code, idEnterprise);
 
         if (result == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
@@ -76,9 +76,9 @@ public class PropertyController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int idProperty)
     {
-        var result = await _propertyService.DeletePropertyAsync(id);
+        var result = await _propertyService.DeletePropertyAsync(idProperty);
 
         if (!result)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");

@@ -23,23 +23,23 @@ public class PropertyService : IPropertyService
         return created.Adapt<PropertyDto>();
     }
 
-    public async Task<IEnumerable<PropertyDto>> GetAllPropertiesAsync()
+    public async Task<IEnumerable<PropertyDto>> GetAllPropertiesAsync(int idEnterprise)
     {
-        var properties = await _propertyRepository.GetAllPropertiesAsync();
+        var properties = await _propertyRepository.GetAllPropertiesAsync(idEnterprise);
 
         return properties.Adapt<IEnumerable<PropertyDto>>();
     }
 
-    public async Task<PropertyDto> GetPropertyByIdAsync(int id)
+    public async Task<PropertyDto> GetPropertyByIdAsync(int idProperty, int idEnterprise)
     {
-        var property = await _propertyRepository.GetPropertyByIdAsync(id);
+        var property = await _propertyRepository.GetPropertyByIdAsync(idProperty, idEnterprise);
 
         return property.Adapt<PropertyDto>();
     }
 
-    public async Task<PropertyDto> GetPropertyByCodeAsync(string code)
+    public async Task<PropertyDto> GetPropertyByCodeAsync(string code, int idEnterprise)
     {
-        var property = await _propertyRepository.GetPropertyByCodeAsync(code);
+        var property = await _propertyRepository.GetPropertyByCodeAsync(code, idEnterprise);
 
         return property.Adapt<PropertyDto>();
     }
@@ -53,9 +53,9 @@ public class PropertyService : IPropertyService
         return updated.Adapt<PropertyDto>();
     }
 
-    public async Task<bool> DeletePropertyAsync(int id)
+    public async Task<bool> DeletePropertyAsync(int idProperty)
     {
-        var property = await _propertyRepository.DeletePropertyAsync(id);
+        var property = await _propertyRepository.DeletePropertyAsync(idProperty);
 
         return property;
     }
