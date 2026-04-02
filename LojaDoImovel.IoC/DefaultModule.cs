@@ -17,9 +17,12 @@ public class DefaultModule
         service.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("PgSql")));
         service.RegisterMaps();
 
-
         service.AddScoped<ITokenService, TokenService>();
+
         service.AddTransient<IPropertyRepository, PropertyRepository>();
         service.AddTransient<IPropertyService, PropertyService>();
+
+        service.AddTransient<IEnterpriseRepository, EnterpriseRepository>();
+        service.AddTransient<IEnterpriseService, EnterpriseService>();
     }
 }

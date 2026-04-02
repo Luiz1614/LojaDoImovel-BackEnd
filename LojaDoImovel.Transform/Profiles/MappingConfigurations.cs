@@ -1,7 +1,9 @@
-﻿using LojaDoImovel.Contracts.DTOs.Property;
-using LojaDoImovel.Contracts.DTOs.PropertyImage;
-using Microsoft.Extensions.DependencyInjection;
+﻿using LojaDoImovel.Contracts.DTOs.Enterprise;
+using LojaDoImovel.Contracts.DTOs.Property;
+using LojaDoImovel.Contracts.DTOs.PropertyDtos;
+using LojaDoImovel.Contracts.DTOs.PropertyImageDtos;
 using Mapster;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LojaDoImovel.Transform.Profiles;
 
@@ -9,6 +11,7 @@ public static class MappingConfigurations
 {
     public static void RegisterMaps(this IServiceCollection services)
     {
+        // --- Property Mappings ---
         // CreatePropertyDto -> Property
         TypeAdapterConfig<CreatePropertyDto, Property>
             .NewConfig()
@@ -34,8 +37,28 @@ public static class MappingConfigurations
         TypeAdapterConfig<PropertyImage, PropertyImageDto>
             .NewConfig();
 
-        // PropertyImageDto -> PropertyImage (caso precise para upload/atualização)
+        // PropertyImageDto -> PropertyImage
         TypeAdapterConfig<PropertyImageDto, PropertyImage>
+            .NewConfig();
+
+        // --- Enterprise Mappings ---
+        // CreateEnterpriseDto -> Enterprise
+        TypeAdapterConfig<CreateEnterpriseDto, Enterprise>
+            .NewConfig()
+            .Ignore(dest => dest.Id)
+            .Ignore(dest => dest.Properties);
+
+        // UpdateEnterpriseDto -> Enterprise
+        TypeAdapterConfig<UpdateEnterpriseDto, Enterprise>
+            .NewConfig()
+            .Ignore(dest => dest.Properties);
+
+        // Enterprise -> EnterpriseDto
+        TypeAdapterConfig<Enterprise, EnterpriseDto>
+            .NewConfig();
+
+        // EnterpriseDto -> Enterprise (se necessário para testes/updates)
+        TypeAdapterConfig<EnterpriseDto, Enterprise>
             .NewConfig();
     }
 }

@@ -1,5 +1,4 @@
-﻿using LojaDoImovel.Contracts.DTOs.Enterprise;
-using LojaDoImovel.Contracts.DTOs.PropertyImage;
+﻿using LojaDoImovel.Contracts.DTOs.PropertyImageDtos;
 
 namespace LojaDoImovel.Contracts.DTOs.Property;
 

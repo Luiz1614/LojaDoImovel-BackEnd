@@ -1,5 +1,6 @@
 ﻿using LojaDoImovel.Application.Services.Interfaces;
 using LojaDoImovel.Contracts.DTOs.Property;
+using LojaDoImovel.Contracts.DTOs.PropertyDtos;
 using LojaDoImovel.Infrastructure.Repositories.Interfaces;
 using Mapster;
 
@@ -17,6 +18,9 @@ public class PropertyService : IPropertyService
     public async Task<PropertyDto> AddPropertyAsync(CreatePropertyDto createPropertyDto)
     {
         var property = createPropertyDto.Adapt<Property>();
+
+        property.CreatedAt = DateTime.UtcNow;
+        property.UpdatedAt = DateTime.UtcNow;
 
         var created = await _propertyRepository.AddPropertyAsync(property);
 
@@ -47,6 +51,8 @@ public class PropertyService : IPropertyService
     public async Task<PropertyDto> UpdatePropertyAsync(UpdatePropertyDto updatePropertyDto)
     {
         var property = updatePropertyDto.Adapt<Property>();
+
+        property.UpdatedAt = DateTime.UtcNow;
 
         var updated = await _propertyRepository.UpdatePropertyAsync(property);
 

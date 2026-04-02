@@ -1,4 +1,5 @@
 ﻿using LojaDoImovel.Contracts.DTOs.Property;
+using LojaDoImovel.Contracts.DTOs.PropertyDtos;
 
 namespace LojaDoImovel.Application.Services.Interfaces
 {

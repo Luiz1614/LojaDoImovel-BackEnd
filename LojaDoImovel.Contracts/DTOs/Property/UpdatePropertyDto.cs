@@ -1,4 +1,4 @@
-﻿namespace LojaDoImovel.Contracts.DTOs.Property;
+﻿namespace LojaDoImovel.Contracts.DTOs.PropertyDtos;
 
 public class UpdatePropertyDto
 {
