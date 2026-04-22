@@ -23,6 +23,8 @@ builder.Services.AddControllers(options =>
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
+var LojaDoImovelManager = "_lojaDoImovelManager";
+
 var secretKey = builder.Configuration["Jwt:SecretKey"]
     ?? throw new ArgumentException("Invalid secret key!");
 
@@ -87,7 +89,15 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: LojaDoImovelManager, policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod(); ;
+    });
+});
 
 builder.Services.AddAuthorization();
 
@@ -100,6 +110,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MapSwagger();
 }
+
+app.UseCors(LojaDoImovelManager);
 
 app.UseHttpsRedirection();
 
