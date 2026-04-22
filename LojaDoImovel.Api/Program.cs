@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -21,8 +22,6 @@ builder.Services.AddControllers(options =>
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-
-builder.Services.AddSwaggerGen();
 
 var secretKey = builder.Configuration["Jwt:SecretKey"]
     ?? throw new ArgumentException("Invalid secret key!");
@@ -54,6 +53,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSwaggerGen(options =>
 {
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "LojaDoImovel-Api", Version = "v1" });
 
     options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme

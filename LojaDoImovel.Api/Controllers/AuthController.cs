@@ -28,10 +28,15 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Autentica usuário e retorna access e refresh tokens.
+    /// Authenticates a user based on the provided login credentials and issues a JWT access token and refresh token
+    /// upon successful authentication.
     /// </summary>
-    /// <param name="loginDto">Email e senha.</param>
-    /// <returns>200 com tokens ou 401.</returns>
+    /// <remarks>Returns an HTTP 401 Unauthorized response if the user's credentials are invalid or if the
+    /// user's status is pending approval. The access token and refresh token should be used for subsequent
+    /// authenticated requests and token refresh operations.</remarks>
+    /// <param name="loginDto">An object containing the user's email and password used for authentication. Cannot be null.</param>
+    /// <returns>An HTTP 200 response containing the access token, refresh token, and token expiration if authentication is
+    /// successful; otherwise, an HTTP 401 Unauthorized response.</returns>
     [HttpPost]
     [Route("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
@@ -91,10 +96,15 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Registra novo usuário e adiciona ao papel 'userunapproved'.
+    /// Handles user registration by creating a new user account with the provided registration details.
     /// </summary>
-    /// <param name="registerDto">Dados do usuário.</param>
-    /// <returns>201, 409 ou 500.</returns>
+    /// <remarks>This action assigns the new user to the 'userunapproved' role upon successful registration.
+    /// The endpoint is accessible via HTTP POST at 'register'.</remarks>
+    /// <param name="registerDto">The registration information for the new user. Must include a valid email, username, password, and optionally a
+    /// phone number. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult indicating the
+    /// outcome of the registration: 201 (Created) if successful, 409 (Conflict) if the user already exists, or 500
+    /// (Internal Server Error) if registration fails.</returns>
     [HttpPost]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -133,11 +143,15 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Gera novo access token a partir de refresh token válido.
+    /// Handles a refresh token request by validating the provided access and refresh tokens, and issues new tokens if
+    /// the request is valid.
     /// </summary>
-    /// <param name="tokenDto">Access token expirado e refresh token.</param>
-    /// <returns>200 com novos tokens ou 400.</returns>
-    /// <exception cref="ArgumentNullException" />
+    /// <remarks>The refresh token must match the user's current refresh token and must not be expired. This
+    /// endpoint is typically used to obtain new tokens without requiring the user to re-authenticate.</remarks>
+    /// <param name="tokenDto">An object containing the expired access token and the associated refresh token. Cannot be null.</param>
+    /// <returns>An HTTP response containing new access and refresh tokens if the request is valid; otherwise, a Bad Request
+    /// response indicating the failure reason.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="tokenDto"/> is null, or if its AccessToken or RefreshToken properties are null.</exception>
     [HttpPost]
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
@@ -187,6 +201,14 @@ public class AuthController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Approves a user account by updating the user's status to approved.
+    /// </summary>
+    /// <remarks>This action requires the caller to have the 'admin' role. Only users with administrative
+    /// privileges can approve user accounts.</remarks>
+    /// <param name="username">The user name of the account to approve. Cannot be null or empty.</param>
+    /// <returns>An IActionResult indicating the result of the operation. Returns Ok if the user was approved successfully;
+    /// otherwise, returns BadRequest if the user is not found.</returns>
     [HttpPut("approve-user")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> ApproveUser(string username)
