@@ -95,7 +95,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000")
               .AllowAnyHeader()
-              .AllowAnyMethod(); ;
+              .AllowAnyMethod();
     });
 });
 
@@ -111,11 +111,11 @@ if (app.Environment.IsDevelopment())
     app.MapSwagger();
 }
 
-app.UseCors(LojaDoImovelManager);
-
 app.UseHttpsRedirection();
 
 app.UseRateLimiter();
+
+app.UseCors(LojaDoImovelManager);
 
 app.UseAuthorization();
 

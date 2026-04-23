@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
             if (user.Status is UserStatus.Pending)
             {
                 _logger.LogWarning("Login denied for user {Email}: pending approval.", loginDto.Email);
-                return Unauthorized("Aguardando aprovação de um administrador.");
+                return StatusCode((int)HttpStatusCode.Forbidden, "Aguardando aprovação de um administrador.");
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);
