@@ -7,6 +7,8 @@ using LojaDoImovel.Transform.Profiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
+using System.Net.Mail;
 
 namespace LojaDoImovel.IoC;
 
@@ -18,6 +20,7 @@ public class DefaultModule
         service.RegisterMaps();
 
         service.AddScoped<ITokenService, TokenService>();
+        service.AddScoped<IEmailService, EmailService>();
 
         service.AddTransient<IPropertyRepository, PropertyRepository>();
         service.AddTransient<IPropertyService, PropertyService>();

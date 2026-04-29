@@ -1,11 +1,15 @@
 using LojaDoImovel.Api.Filters;
+using LojaDoImovel.Application.Settings;
 using LojaDoImovel.Infrastructure.Data;
 using LojaDoImovel.Infrastructure.Identity;
 using LojaDoImovel.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
@@ -88,6 +92,12 @@ builder.Services.AddRateLimiter(options =>
                 Window = TimeSpan.FromMinutes(1)
             }));
 });
+
+builder.Services.AddOptions<EmailSettings>()
+    .BindConfiguration("EmailConfig")
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 
 builder.Services.AddCors(options =>
 {

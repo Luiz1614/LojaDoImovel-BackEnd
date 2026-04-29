@@ -1,7 +1,9 @@
-﻿using LojaDoImovel.Contracts.DTOs.Enterprise;
+﻿using LojaDoImovel.Contracts.DTOs.ApplicationUser;
+using LojaDoImovel.Contracts.DTOs.Enterprise;
 using LojaDoImovel.Contracts.DTOs.Property;
 using LojaDoImovel.Contracts.DTOs.PropertyDtos;
 using LojaDoImovel.Contracts.DTOs.PropertyImageDtos;
+using LojaDoImovel.Infrastructure.Identity;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +14,10 @@ public static class MappingConfigurations
     public static void RegisterMaps(this IServiceCollection services)
     {
         // --- Property Mappings ---
+
+        TypeAdapterConfig<ApplicationUser, PendingUserDto>
+            .NewConfig();
+
         // CreatePropertyDto -> Property
         TypeAdapterConfig<CreatePropertyDto, Property>
             .NewConfig()

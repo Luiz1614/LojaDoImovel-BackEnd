@@ -1,9 +1,11 @@
 ﻿using LojaDoImovel.Application.Services.Interfaces;
 using LojaDoImovel.Contracts.DTOs.ApplicationUser;
 using LojaDoImovel.Infrastructure.Identity;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -16,15 +18,17 @@ public class AuthController : ControllerBase
 {
     private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
     private readonly ILogger<AuthController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AuthController(ITokenService tokenService, IConfiguration configuration, ILogger<AuthController> logger, UserManager<ApplicationUser> userManager)
+    public AuthController(ITokenService tokenService, IConfiguration configuration, ILogger<AuthController> logger, UserManager<ApplicationUser> userManager, IEmailService emailService)
     {
         _tokenService = tokenService;
         _configuration = configuration;
         _logger = logger;
         _userManager = userManager;
+        _emailService = emailService;
     }
 
     /// <summary>
@@ -92,7 +96,7 @@ public class AuthController : ControllerBase
         }
 
         _logger.LogWarning("Login failed for email: {Email}", loginDto.Email);
-        return Unauthorized();
+        return Unauthorized("Email ou senha inválidos.");
     }
 
     /// <summary>
@@ -137,6 +141,17 @@ public class AuthController : ControllerBase
             _logger.LogError("Register failed for email: {Email}. Errors: {Errors}", registerDto.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro ao criar usuário. \n{result}");
         }
+
+        await _emailService.SendEmailAsync(emailsTo: new List<string>
+        {
+            user.Email!
+        },
+        subject: "Criação de Usuário Loja do Imóvel",
+        body: "Seu usuário acaba de ser criado no sistema da loja do imóvel manager, o próximo passo é um administrador vai aprovar seu acesso, assim que for aprovado você receberá outro email como este informando.",
+        attachments: new List<string>
+        {
+            @"C:\Users\luizo\Downloads\lebron.jpg"
+        });
 
         _logger.LogInformation("User registered successfully: {Email}", registerDto.Email);
         return StatusCode((int)HttpStatusCode.Created, "Usuário criado com sucesso!");
@@ -224,6 +239,33 @@ public class AuthController : ControllerBase
 
         _ = await _userManager.UpdateAsync(user);
 
+        await _emailService.SendEmailAsync(emailsTo: new List<string>
+        {
+            user.Email!
+        },
+        subject: "Aprovação de Usuário Loja do Imóvel",
+        body: "Seu usuário acaba de ser aprovado no sistema da loja do imóvel manager.",
+        attachments: new List<string>
+        {
+            @"C:\Users\luizo\Downloads\lebron.jpg"
+        });
+
         return Ok("Usuário aprovado com sucesso!");
+    }
+
+    [HttpGet("pending-users")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GetAllPendingUsers()
+    {
+        var user = await _userManager.Users
+            .Where(u => u.Status == UserStatus.Pending)
+            .ToListAsync();
+
+        if (user is null)
+        {
+            return BadRequest("Nenhum usuário pendente.");
+        }
+
+        return Ok(user.Adapt<IEnumerable<PendingUserDto>>());
     }
 }
