@@ -237,6 +237,8 @@ public class AuthController : ControllerBase
 
         user.Status = UserStatus.Approved;
 
+        _ = await _userManager.RemoveFromRoleAsync(user, "userunapproved");
+        _ = await _userManager.AddToRoleAsync(user, "userapproved");
         _ = await _userManager.UpdateAsync(user);
 
         await _emailService.SendEmailAsync(emailsTo: new List<string>

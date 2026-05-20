@@ -1,4 +1,6 @@
-﻿namespace LojaDoImovel.Contracts.DTOs.Property;
+﻿using LojaDoImovel.Contracts.DTOs.PropertyImageDtos;
+
+namespace LojaDoImovel.Contracts.DTOs.Property;
 
 public class CreatePropertyDto
 {
@@ -29,4 +31,5 @@ public class CreatePropertyDto
     public bool IsPublished { get; set; }
     public bool IsFeatured { get; set; }
     public int CreatedByUserId { get; set; }
+    public List<PropertyImageDto>? ImageUrls { get; set; }
 }

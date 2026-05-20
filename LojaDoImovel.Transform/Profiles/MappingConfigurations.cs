@@ -23,7 +23,9 @@ public static class MappingConfigurations
             .NewConfig()
             .Ignore(dest => dest.Id)
             .Ignore(dest => dest.Enterprise)
-            .Ignore(dest => dest.Images)
+            .Map(dest => dest.Images, src => src.ImageUrls != null
+                ? src.ImageUrls.Adapt<ICollection<PropertyImage>>()
+                : null)
             .Ignore(dest => dest.CreatedAt)
             .Ignore(dest => dest.UpdatedAt);
 
@@ -37,7 +39,9 @@ public static class MappingConfigurations
         // Property -> PropertyDto
         TypeAdapterConfig<Property, PropertyDto>
             .NewConfig()
-            .Map(dest => dest.Images, src => src.Images.Adapt<List<PropertyImageDto>>());
+            .Map(dest => dest.Images, src => src.Images != null
+                ? src.Images.Adapt<List<PropertyImageDto>>()
+                : null);
 
         // PropertyImage -> PropertyImageDto
         TypeAdapterConfig<PropertyImage, PropertyImageDto>

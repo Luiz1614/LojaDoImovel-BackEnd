@@ -123,9 +123,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseRateLimiter();
+app.UseStaticFiles();
+
+app.UseRouting();
 
 app.UseCors(LojaDoImovelManager);
+
+app.UseRateLimiter();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
