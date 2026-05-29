@@ -1,4 +1,5 @@
 using LojaDoImovel.Api.Filters;
+using LojaDoImovel.Application.Integrations.Interfaces;
 using LojaDoImovel.Application.Settings;
 using LojaDoImovel.Infrastructure.Data;
 using LojaDoImovel.Infrastructure.Identity;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Refit;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
@@ -107,6 +109,11 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
+});
+
+builder.Services.AddRefitClient<ICepIntegration>().ConfigureHttpClient(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["Integrations:CepIntegration"]!);
 });
 
 builder.Services.AddAuthorization();

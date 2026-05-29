@@ -21,11 +21,12 @@ public class DefaultModule
 
         service.AddScoped<ITokenService, TokenService>();
         service.AddScoped<IEmailService, EmailService>();
+        service.AddScoped<ICepService, CepService>();
 
-        service.AddTransient<IPropertyRepository, PropertyRepository>();
-        service.AddTransient<IPropertyService, PropertyService>();
+        service.AddScoped<IPropertyRepository, PropertyRepository>();
+        service.AddScoped<IPropertyService, PropertyService>();
 
-        service.AddTransient<IEnterpriseRepository, EnterpriseRepository>();
-        service.AddTransient<IEnterpriseService, EnterpriseService>();
+        service.AddScoped<IEnterpriseRepository, EnterpriseRepository>();
+        service.AddScoped<IEnterpriseService, EnterpriseService>();
     }
 }
