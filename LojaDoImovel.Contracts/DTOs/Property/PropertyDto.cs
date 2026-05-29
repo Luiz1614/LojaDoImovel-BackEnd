@@ -15,7 +15,7 @@ public class PropertyDto
     public decimal? PropertyTax { get; set; }
     public string Street { get; set; }
     public string Number { get; set; }
-    public string Complement { get; set; }
+    public string? Complement { get; set; }
     public string Neighborhood { get; set; }
     public string City { get; set; }
     public string State { get; set; }
@@ -32,6 +32,7 @@ public class PropertyDto
     public bool IsPublished { get; set; }
     public bool IsFeatured { get; set; }
     public int CreatedByUserId { get; set; }
+    public string? VideoUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public List<PropertyImageDto>? Images { get; set; }

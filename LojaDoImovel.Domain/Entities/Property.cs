@@ -20,7 +20,7 @@
     // Location
     public required string Street { get; set; }
     public required string Number { get; set; }
-    public string Complement { get; set; } = string.Empty;
+    public string? Complement { get; set; }
     public required string Neighborhood { get; set; }
     public required string City { get; set; }
     public required string State { get; set; }
@@ -48,5 +48,6 @@
     public DateTime? UpdatedAt { get; set; }
 
     // Navigation
+    public string? VideoUrl { get; set; }
     public ICollection<PropertyImage>? Images { get; set; }
 }

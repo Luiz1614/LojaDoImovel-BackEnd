@@ -102,7 +102,7 @@ public class PropertyController : ControllerBase
     /// update is successful; otherwise, returns status code 400 (Bad Request) if the update fails due to invalid data.</returns>
     [HttpPut]
     [Authorize(Roles = "userapproved")]
-    public async Task<IActionResult> Put(UpdatePropertyDto updatePropertyDto)
+    public async Task<IActionResult> Put([FromBody] UpdatePropertyDto updatePropertyDto)
     {
         var result = await _propertyService.UpdatePropertyAsync(updatePropertyDto);
 

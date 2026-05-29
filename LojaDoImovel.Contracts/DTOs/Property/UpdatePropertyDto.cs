@@ -1,4 +1,6 @@
-﻿namespace LojaDoImovel.Contracts.DTOs.PropertyDtos;
+﻿using LojaDoImovel.Contracts.DTOs.PropertyImageDtos;
+
+namespace LojaDoImovel.Contracts.DTOs.PropertyDtos;
 
 public class UpdatePropertyDto
 {
@@ -27,7 +29,9 @@ public class UpdatePropertyDto
     public decimal? TotalArea { get; set; }
     public string PropertyType { get; set; }
     public string Purpose { get; set; }
+    public string? VideoUrl { get; set; }
     public bool IsPublished { get; set; }
     public bool IsFeatured { get; set; }
     public int CreatedByUserId { get; set; }
+    public List<PropertyImageDto>? Images { get; set; }
 }

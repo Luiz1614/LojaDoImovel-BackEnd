@@ -32,7 +32,6 @@ public static class MappingConfigurations
         // UpdatePropertyDto -> Property
         TypeAdapterConfig<UpdatePropertyDto, Property>
             .NewConfig()
-            .Ignore(dest => dest.Id)
             .Ignore(dest => dest.Enterprise)
             .Ignore(dest => dest.CreatedAt);
 

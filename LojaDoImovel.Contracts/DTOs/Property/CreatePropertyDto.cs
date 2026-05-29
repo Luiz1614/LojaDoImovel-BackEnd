@@ -30,6 +30,7 @@ public class CreatePropertyDto
     public string Purpose { get; set; }
     public bool IsPublished { get; set; }
     public bool IsFeatured { get; set; }
+    public string? VideoUrl { get; set; }
     public int CreatedByUserId { get; set; }
     public List<PropertyImageDto>? ImageUrls { get; set; }
 }
