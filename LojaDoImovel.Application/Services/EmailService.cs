@@ -29,9 +29,18 @@ public class EmailService : IEmailService
         ArgumentException.ThrowIfNullOrWhiteSpace(body);
 
         var validEmails = emailsTo.Where(ValidateEmail).ToList();
+        var invalidEmails = emailsTo.Except(validEmails).ToList();
+
+        if (invalidEmails.Count > 0)
+            _logger.LogWarning("E-mails inválidos ignorados: {InvalidEmails}", string.Join(", ", invalidEmails));
 
         if (validEmails.Count == 0)
+        {
+            _logger.LogError("Nenhum e-mail válido informado para o assunto '{Subject}'.", subject);
             throw new ArgumentException("Nenhum e-mail válido foi informado.", nameof(emailsTo));
+        }
+
+        _logger.LogInformation("Preparando envio de e-mail. Assunto: '{Subject}'. Destinatários: {Recipients}.", subject, string.Join(", ", validEmails));
 
         var message = PrepareMessage(validEmails, subject, body, attachments ?? []);
 
@@ -40,15 +49,19 @@ public class EmailService : IEmailService
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
 
             await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+            _logger.LogInformation("Conexão SMTP estabelecida com {Host}:{Port}.", _settings.Host, _settings.Port);
+
             await smtp.AuthenticateAsync(_settings.Username, _settings.Password);
+            _logger.LogInformation("Autenticação SMTP bem-sucedida.");
+
             await smtp.SendAsync(message);
             await smtp.DisconnectAsync(true);
 
-            _logger.LogInformation("E-mail enviado para: {Recipients}", string.Join(", ", validEmails));
+            _logger.LogInformation("E-mail enviado com sucesso para: {Recipients}. Assunto: '{Subject}'.", string.Join(", ", validEmails), subject);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Falha ao enviar e-mail para: {Recipients}", string.Join(", ", validEmails));
+            _logger.LogError(ex, "Falha ao enviar e-mail para: {Recipients}. Assunto: '{Subject}'.", string.Join(", ", validEmails), subject);
             throw;
         }
     }

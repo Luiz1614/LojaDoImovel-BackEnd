@@ -255,6 +255,13 @@ public class AuthController : ControllerBase
         return Ok("Usuário aprovado com sucesso!");
     }
 
+    /// <summary>
+    /// Retrieves all user accounts with pending approval status.
+    /// </summary>
+    /// <remarks>This action requires the caller to have the 'admin' role. Only users with administrative
+    /// privileges can view pending user accounts.</remarks>
+    /// <returns>An HTTP 200 response containing the list of pending users if any exist; otherwise, a 400 Bad Request
+    /// response if no pending users are found.</returns>
     [HttpGet("pending-users")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetAllPendingUsers()

@@ -28,11 +28,17 @@ public class EnterpriseController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(CreateEnterpriseDto createEnterpriseDto)
     {
+        _logger.LogInformation("Requisição para adicionar empreendimento recebida.");
+
         var result = await _enterpriseService.AddEnterpriseAsync(createEnterpriseDto);
 
         if (result == null)
+        {
+            _logger.LogWarning("Falha ao adicionar empreendimento. Dados inválidos ou operação não permitida.");
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível adicionar o empreendimento. Verifique os dados enviados.");
+        }
 
+        _logger.LogInformation("Empreendimento adicionado com sucesso. Id: {Id}", result.Id);
         return StatusCode((int)HttpStatusCode.Created, "Empreendimento adicionado com sucesso!");
     }
 
@@ -44,10 +50,15 @@ public class EnterpriseController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        _logger.LogInformation("Buscando todos os empreendimentos.");
+
         var result = await _enterpriseService.GetAllEnterpriseAsync();
 
-        if(result == null)
+        if (result == null)
+        {
+            _logger.LogWarning("Nenhum empreendimento encontrado.");
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum empreendimento encontrado.");
+        }
 
         return StatusCode((int)HttpStatusCode.OK, result);
     }
@@ -61,10 +72,15 @@ public class EnterpriseController : ControllerBase
     [HttpGet("id")]
     public async Task<IActionResult> GetById(int idEnterprise)
     {
+        _logger.LogInformation("Buscando empreendimento {IdEnterprise}.", idEnterprise);
+
         var result = await _enterpriseService.GetEnterpriseByIdAsync(idEnterprise);
 
         if (result == null)
+        {
+            _logger.LogWarning("Empreendimento {IdEnterprise} não encontrado.", idEnterprise);
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum empreendimento encontrado.");
+        }
 
         return StatusCode((int)HttpStatusCode.OK, result);
     }
@@ -79,10 +95,15 @@ public class EnterpriseController : ControllerBase
     [HttpGet("name")]
     public async Task<IActionResult> GetByName(string name)
     {
+        _logger.LogInformation("Buscando empreendimento com nome '{Name}'.", name);
+
         var result = await _enterpriseService.GetEnterpriseByNameAsync(name);
 
         if (result == null)
+        {
+            _logger.LogWarning("Empreendimento com nome '{Name}' não encontrado.", name);
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum empreendimento encontrado.");
+        }
 
         return StatusCode((int)HttpStatusCode.OK, result);
     }
@@ -96,11 +117,17 @@ public class EnterpriseController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Put(UpdateEnterpriseDto updateEnterpriseDto)
     {
+        _logger.LogInformation("Requisição para atualizar empreendimento {IdEnterprise} recebida.", updateEnterpriseDto.Id);
+
         var result = await _enterpriseService.UpdateEnterpriseAsync(updateEnterpriseDto);
 
         if (result == null)
+        {
+            _logger.LogWarning("Falha ao atualizar empreendimento {IdEnterprise}. Dados inválidos ou operação não permitida.", updateEnterpriseDto.Id);
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível atualizar o empreendimento. Verifique os dados enviados.");
+        }
 
+        _logger.LogInformation("Empreendimento {IdEnterprise} atualizado com sucesso.", updateEnterpriseDto.Id);
         return StatusCode((int)HttpStatusCode.NoContent, "Empreendimento atualizado com sucesso!");
     }
 
@@ -114,11 +141,17 @@ public class EnterpriseController : ControllerBase
     [HttpPut("unactivate")]
     public async Task<IActionResult> Unactivate(UpdateEnterpriseDto updateEnterpriseDto)
     {
+        _logger.LogInformation("Requisição para desativar empreendimento {IdEnterprise} recebida.", updateEnterpriseDto.Id);
+
         var result = await _enterpriseService.UnactivateEnterpriseAsycn(updateEnterpriseDto);
 
         if (result == null)
+        {
+            _logger.LogWarning("Falha ao desativar empreendimento {IdEnterprise}. Dados inválidos ou operação não permitida.", updateEnterpriseDto.Id);
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível desativar o empreendimento. Verifique os dados enviados.");
+        }
 
+        _logger.LogInformation("Empreendimento {IdEnterprise} desativado com sucesso.", updateEnterpriseDto.Id);
         return StatusCode((int)HttpStatusCode.NoContent, "Empreendimento desativado com sucesso!");
     }
 }

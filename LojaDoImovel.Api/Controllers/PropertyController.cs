@@ -31,11 +31,17 @@ public class PropertyController : ControllerBase
     [Authorize(Roles = "userapproved")]
     public async Task<IActionResult> Post([FromBody] CreatePropertyDto createPropertyDto)
     {
+        _logger.LogInformation("Requisição para adicionar imóvel recebida.");
+
         var result = await _propertyService.AddPropertyAsync(createPropertyDto);
 
         if (result == null)
+        {
+            _logger.LogWarning("Falha ao adicionar imóvel. Dados inválidos ou operação não permitida.");
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível adicionar o imóvel. Verifique os dados enviados.");
+        }
 
+        _logger.LogInformation("Imóvel adicionado com sucesso. Id: {Id}", result.Id);
         return StatusCode((int)HttpStatusCode.Created, "Imóvel adicionado com sucesso!");
     }
 
@@ -48,10 +54,15 @@ public class PropertyController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll(int idEnterprise)
     {
+        _logger.LogInformation("Buscando todos os imóveis do empreendimento {IdEnterprise}.", idEnterprise);
+
         var result = await _propertyService.GetAllPropertiesAsync(idEnterprise);
 
         if (result == null)
+        {
+            _logger.LogWarning("Nenhum imóvel encontrado para o empreendimento {IdEnterprise}.", idEnterprise);
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
+        }
 
         return StatusCode((int)HttpStatusCode.OK, result);
     }
@@ -66,10 +77,15 @@ public class PropertyController : ControllerBase
     [HttpGet("id")]
     public async Task<IActionResult> GetById(int idProperty, int idEnterprise)
     {
+        _logger.LogInformation("Buscando imóvel {IdProperty} do empreendimento {IdEnterprise}.", idProperty, idEnterprise);
+
         var result = await _propertyService.GetPropertyByIdAsync(idProperty, idEnterprise);
 
         if (result == null)
+        {
+            _logger.LogWarning("Imóvel {IdProperty} não encontrado no empreendimento {IdEnterprise}.", idProperty, idEnterprise);
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
+        }
 
         return StatusCode((int)HttpStatusCode.OK, result);
     }
@@ -83,10 +99,15 @@ public class PropertyController : ControllerBase
     [HttpGet("code")]
     public async Task<IActionResult> GetByCode(string code, int idEnterprise)
     {
+        _logger.LogInformation("Buscando imóvel com código {Code} no empreendimento {IdEnterprise}.", code, idEnterprise);
+
         var result = await _propertyService.GetPropertyByCodeAsync(code, idEnterprise);
 
         if (result == null)
+        {
+            _logger.LogWarning("Imóvel com código {Code} não encontrado no empreendimento {IdEnterprise}.", code, idEnterprise);
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
+        }
 
         return StatusCode((int)HttpStatusCode.OK, result);
     }
@@ -104,13 +125,18 @@ public class PropertyController : ControllerBase
     [Authorize(Roles = "userapproved")]
     public async Task<IActionResult> Put([FromBody] UpdatePropertyDto updatePropertyDto)
     {
+        _logger.LogInformation("Requisição para atualizar imóvel {IdProperty} recebida.", updatePropertyDto.Id);
+
         var result = await _propertyService.UpdatePropertyAsync(updatePropertyDto);
 
         if (result == null)
+        {
+            _logger.LogWarning("Falha ao atualizar imóvel {IdProperty}. Dados inválidos ou operação não permitida.", updatePropertyDto.Id);
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível atualizar o imóvel. Verifique os dados enviados.");
+        }
 
+        _logger.LogInformation("Imóvel {IdProperty} atualizado com sucesso.", updatePropertyDto.Id);
         return StatusCode((int)HttpStatusCode.NoContent, "Imóvel atualizado com sucesso!");
-
     }
 
     /// <summary>
@@ -123,11 +149,17 @@ public class PropertyController : ControllerBase
     [Authorize(Roles = "userapproved")]
     public async Task<IActionResult> Delete(int idProperty)
     {
+        _logger.LogInformation("Requisição para deletar imóvel {IdProperty} recebida.", idProperty);
+
         var result = await _propertyService.DeletePropertyAsync(idProperty);
 
         if (!result)
+        {
+            _logger.LogWarning("Imóvel {IdProperty} não encontrado para exclusão.", idProperty);
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhum imóvel encontrado.");
+        }
 
+        _logger.LogInformation("Imóvel {IdProperty} deletado com sucesso.", idProperty);
         return StatusCode((int)HttpStatusCode.NoContent, "Imóvel deletado com sucesso!");
     }
 }
