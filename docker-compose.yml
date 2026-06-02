@@ -1,0 +1,46 @@
+services:
+  api:
+    image: lojadoimovelapi
+    build:
+      context: .
+      dockerfile: LojaDoImovel.Api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__PgSql=${DATABASE_URL}
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
+      - Jwt__ValidAudience=${API_URL}
+      - Jwt__ValidIssuer=${API_URL}
+      - EmailConfig__Username=${EMAIL_USERNAME}
+      - EmailConfig__Password=${EMAIL_PASSWORD}
+      - Seed__AdminEmail=${SEED__ADMINEMAIL}
+      - Seed__AdminPassword=${SEED__ADMINPASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lojadoimovel
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=lojadoimovel_db
+      - POSTGRES_USER=lojadoimovel
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lojadoimovel -d lojadoimovel_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lojadoimovel
+
+volumes:
+  postgres_data:
+
+networks:
+  lojadoimovel:

@@ -23,4 +23,10 @@
   <Folder Name="/8 - Tests/">
     <Project Path="LojaDoImovel.Tests/LojaDoImovel.Tests.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".env" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>

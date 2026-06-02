@@ -6,6 +6,7 @@ using LojaDoImovel.Infrastructure.Identity;
 using LojaDoImovel.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -119,6 +120,13 @@ builder.Services.AddRefitClient<ICepIntegration>().ConfigureHttpClient(c =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+    await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
