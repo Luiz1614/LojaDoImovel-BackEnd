@@ -35,7 +35,7 @@ var LojaDoImovelManager = "_lojaDoImovelManager";
 var secretKey = builder.Configuration["Jwt:SecretKey"]
     ?? throw new ArgumentException("Invalid secret key!");
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 

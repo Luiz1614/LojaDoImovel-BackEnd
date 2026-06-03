@@ -10,13 +10,13 @@ public static class DatabaseSeeder
     public static async Task SeedAsync(IServiceProvider services)
     {
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var config = services.GetRequiredService<IConfiguration>();
 
         string[] roles = ["Admin", "User"];
         foreach (var role in roles)
             if (!await roleManager.RoleExistsAsync(role))
-                await roleManager.CreateAsync(new IdentityRole<int>(role));
+                await roleManager.CreateAsync(new IdentityRole<Guid>(role));
 
         var adminEmail = config["Seed:AdminEmail"] ?? "admin@lojadoimovel.com";
         var adminPassword = config["Seed:AdminPassword"]

@@ -2,7 +2,7 @@
 
 namespace LojaDoImovel.Infrastructure.Identity;
 
-public class ApplicationUser : IdentityUser<int>
+public class ApplicationUser : IdentityUser<Guid>
 {
     public string? RefreshToken { get; set; }
     public DateTime RefreshTokenExpireTime { get; set; }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LojaDoImovel.Infrastructure.Data;
 
-public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public DbSet<Enterprise> Enterprises { get; set; }
     public DbSet<Property> Properties { get; set; }
@@ -19,32 +19,32 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
 
         // --- Identity ---
         builder.Entity<ApplicationUser>().ToTable("users");
-        builder.Entity<IdentityRole<int>>().ToTable("roles");
-        builder.Entity<IdentityUserClaim<int>>().ToTable("user_claims");
-        builder.Entity<IdentityUserRole<int>>().ToTable("user_roles");
-        builder.Entity<IdentityUserLogin<int>>().ToTable("user_logins");
-        builder.Entity<IdentityUserToken<int>>().ToTable("user_tokens");
-        builder.Entity<IdentityRoleClaim<int>>().ToTable("role_claims");
+        builder.Entity<IdentityRole<Guid>>().ToTable("roles");
+        builder.Entity<IdentityUserClaim<Guid>>().ToTable("user_claims");
+        builder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
+        builder.Entity<IdentityUserLogin<Guid>>().ToTable("user_logins");
+        builder.Entity<IdentityUserToken<Guid>>().ToTable("user_tokens");
+        builder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
 
         // Seed default roles
-        builder.Entity<IdentityRole<int>>().HasData(
-            new IdentityRole<int>
+        builder.Entity<IdentityRole<Guid>>().HasData(
+            new IdentityRole<Guid>
             {
-                Id = 1,
+                Id = new Guid("00000000-0000-0000-0000-000000000001"),
                 Name = "admin",
                 NormalizedName = "ADMIN",
                 ConcurrencyStamp = "00000000-0000-0000-0000-000000000001"
             },
-            new IdentityRole<int>
+            new IdentityRole<Guid>
             {
-                Id = 2,
+                Id = new Guid("00000000-0000-0000-0000-000000000002"),
                 Name = "userapproved",
                 NormalizedName = "USERAPPROVED",
                 ConcurrencyStamp = "00000000-0000-0000-0000-000000000002"
             },
-            new IdentityRole<int>
+            new IdentityRole<Guid>
             {
-                Id = 3,
+                Id = new Guid("00000000-0000-0000-0000-000000000003"),
                 Name = "userunapproved",
                 NormalizedName = "USERUNAPPROVED",
                 ConcurrencyStamp = "00000000-0000-0000-0000-000000000003"
