@@ -101,12 +101,14 @@ builder.Services.AddOptions<EmailSettings>()
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(",")
+    ?? ["http://localhost:3000"];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: LojaDoImovelManager, policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
