@@ -17,6 +17,7 @@ services:
       - EmailConfig__Password=${EMAIL_PASSWORD}
       - Seed__AdminEmail=${SEED__ADMINEMAIL}
       - Seed__AdminPassword=${SEED__ADMINPASSWORD}
+      - AllowedOrigins=${AllowedOrigins}
     depends_on:
       db:
         condition: service_healthy
