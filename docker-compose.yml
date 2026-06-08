@@ -1,6 +1,7 @@
 services:
   api:
     image: lojadoimovelapi
+    restart: unless-stopped
     build:
       context: .
       dockerfile: LojaDoImovel.Api/Dockerfile
@@ -26,6 +27,7 @@ services:
 
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=lojadoimovel_db
       - POSTGRES_USER=lojadoimovel
