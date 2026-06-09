@@ -13,7 +13,7 @@ public static class DatabaseSeeder
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var config = services.GetRequiredService<IConfiguration>();
 
-        string[] roles = ["Admin", "User"];
+        string[] roles = ["admin", "userapproved", "userunapproved"];
         foreach (var role in roles)
             if (!await roleManager.RoleExistsAsync(role))
                 await roleManager.CreateAsync(new IdentityRole<Guid>(role));
@@ -34,7 +34,10 @@ public static class DatabaseSeeder
 
             var result = await userManager.CreateAsync(admin, adminPassword);
             if (result.Succeeded)
-                await userManager.AddToRoleAsync(admin, "Admin");
+            {
+                await userManager.AddToRoleAsync(admin, "admin");
+                await userManager.AddToRoleAsync(admin, "userapproved");
+            }
         }
     }
 }

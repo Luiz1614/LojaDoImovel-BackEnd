@@ -4,6 +4,7 @@ using LojaDoImovel.Contracts.DTOs.PropertyDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace LojaDoImovel.Api.Controllers;
 
@@ -32,6 +33,8 @@ public class PropertyController : ControllerBase
     public async Task<IActionResult> Post([FromBody] CreatePropertyDto createPropertyDto)
     {
         _logger.LogInformation("Requisição para adicionar imóvel recebida.");
+
+        createPropertyDto.CreatedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         var result = await _propertyService.AddPropertyAsync(createPropertyDto);
 

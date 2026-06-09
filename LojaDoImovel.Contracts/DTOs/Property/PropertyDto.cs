@@ -31,7 +31,7 @@ public class PropertyDto
     public string Purpose { get; set; }
     public bool IsPublished { get; set; }
     public bool IsFeatured { get; set; }
-    public int CreatedByUserId { get; set; }
+    public string? CreatedByUserId { get; set; }
     public string? VideoUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

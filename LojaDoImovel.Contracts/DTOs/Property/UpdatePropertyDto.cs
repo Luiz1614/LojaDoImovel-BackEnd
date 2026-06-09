@@ -32,6 +32,6 @@ public class UpdatePropertyDto
     public string? VideoUrl { get; set; }
     public bool IsPublished { get; set; }
     public bool IsFeatured { get; set; }
-    public int CreatedByUserId { get; set; }
+    public string? CreatedByUserId { get; set; }
     public List<PropertyImageDto>? Images { get; set; }
 }
