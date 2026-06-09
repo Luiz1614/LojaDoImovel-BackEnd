@@ -16,6 +16,7 @@ public class UploadController : ControllerBase
         _logger = logger;
     }
 
+
     /// <summary>
     /// Uploads one or more image files to the server.
     /// </summary>
