@@ -70,7 +70,7 @@ public class EmailService : IEmailService
     {
         var message = new MimeMessage();
 
-        message.From.Add(new MailboxAddress("Loja do Imóvel", _settings.Username));
+        message.From.Add(new MailboxAddress("Loja do Imóvel", _settings.SenderEmail ?? _settings.Username));
 
         foreach (var email in emailsTo)
             message.To.Add(MailboxAddress.Parse(email));

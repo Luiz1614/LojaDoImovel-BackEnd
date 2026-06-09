@@ -12,6 +12,7 @@ public class EmailSettings
     public bool EnableSsl { get; set; }
     [Required] 
     public string Username { get; set; } = string.Empty;
-    [Required] 
+    [Required]
     public string Password { get; set; } = string.Empty;
+    public string? SenderEmail { get; set; }
 }

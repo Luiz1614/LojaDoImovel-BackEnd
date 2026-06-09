@@ -16,6 +16,7 @@ services:
       - Jwt__ValidIssuer=${API_URL}
       - EmailConfig__Username=${EMAIL_USERNAME}
       - EmailConfig__Password=${EMAIL_PASSWORD}
+      - EmailConfig__SenderEmail=${EMAIL_SENDER}
       - Seed__AdminEmail=${SEED__ADMINEMAIL}
       - Seed__AdminPassword=${SEED__ADMINPASSWORD}
       - AllowedOrigins=${AllowedOrigins}
