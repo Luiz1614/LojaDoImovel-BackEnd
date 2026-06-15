@@ -20,6 +20,8 @@ services:
       - Seed__AdminEmail=${SEED__ADMINEMAIL}
       - Seed__AdminPassword=${SEED__ADMINPASSWORD}
       - AllowedOrigins=${AllowedOrigins}
+    volumes:
+      - uploads_data:/app/wwwroot/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -47,6 +49,7 @@ services:
 
 volumes:
   postgres_data:
+  uploads_data:
 
 networks:
   lojadoimovel:
